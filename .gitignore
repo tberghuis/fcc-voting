@@ -1,0 +1,5 @@
+/node_modules
+tmp
+/notes.txt
+npm-debug.log
+.env
