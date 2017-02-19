@@ -3,97 +3,93 @@ import { inject, observer } from 'mobx-react';
 import { observable, extendObservable } from 'mobx';
 import axios from 'axios';
 
-//@inject("viewState", "appState") @observer
 @inject("appState") @observer
 class Poll extends Component {
 
-    // TODO add new options
-
-    //@observable poll = {};
+    // somehow this magiically works without extendObservable
     @observable poll = null;
-
     @observable checkedIndex = null;
 
+    static contextTypes = {
+        router: React.PropTypes.object
+    };
 
     constructor(props) {
         super(props);
 
-        console.log(props);
-        //axios.get
-        let pollId = props.params.pollId;
-
+        // to be abstracted to service class
+        // do it later
+        let pollId = this.props.params.pollId;
         axios.get('/api/poll?id=' + props.params.pollId)
             .then((response) => {
-                console.log(response.data); // ex.: { user: 'Your User'}
-                //console.log(response.status); // ex.: 200
-
-                //this.poll = observable(response.data.poll);
                 this.poll = response.data.poll;
-                //this.poll
-
-
-                //extendObservable(this.poll, response.data.poll);
-                //this.forceUpdate();
             })
             .catch((error) => {
                 // display 404
                 // alert error
                 // redirect home
             });
-
-
     }
 
 
     submitVote = () => {
-        console.log("submit");
-
-        // axios post /api/poll/id { index: 2, newoption: "string" }
+        
+        // axios post /api/poll/id { index: 2, newOption: "string" }
         // protected route
+        let token = "&token=" + localStorage.getItem('token');
+        let vote = {};
+        if (this.checkedIndex === 'newoption') {
+            // get from refs
+            vote.newOption = this.newOption.value;
+        } else {
+            vote.index = this.checkedIndex;
+        }
+        axios.post('/api/pollvote?id=' + this.poll._id + token, vote)
+            .then((response) => {
+
+                // router push /poll/:id/results
+                // put in a function, call from onclick button
+                this.context.router.push('/poll/'+this.poll._id+'/results');
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }
 
 
 
     getRadioList = () => {
-        let list = this.poll.options.map((option,i)=>{
-            return <li key={i} onClick={()=>this.checkedIndex=i}><input type="radio" checked={i===this.checkedIndex} /><span>{option}</span></li>;
+        let list = this.poll.options.map((option, i) => {
+            return <li key={i} onClick={() => this.checkedIndex = i}><input type="radio" checked={i === this.checkedIndex} /><span>{option}</span></li>;
         });
-        list.push(<li key={list.length} class="form-inline" onClick={()=>this.checkedIndex="newoption"}><input type="radio" checked={'newoption'===this.checkedIndex} /><input class="form-control" type="text" placeholder="new option" /></li>);
+        list.push(<li key={list.length} class="form-inline" onClick={() => this.checkedIndex = "newoption"}>
+            <input type="radio" checked={'newoption' === this.checkedIndex} />
+            <input
+                ref={(input) => { this.newOption = input }}
+                class="form-control" type="text" placeholder="new option" /></li>);
         return list;
     }
 
     render() {
-
         if (!this.poll) return <div>loading</div>;
 
         return (
             <div class="row single-poll">
                 <div class="col-6 push-3">
-
                     <h1>{this.poll.title}</h1>
                     <ul class="list-unstyled">
-
-                        { this.getRadioList() }
-
+                        {this.getRadioList()}
                     </ul>
-                    <button 
+                    <button
                         onClick={this.submitVote}
-                        disabled={!this.props.appState.loggedIn || !this.checkedIndex} class="indent">Vote</button> if not logged in, alert, please log in to vote. but make
-                    <button>Results</button>
-                    if show results true, put
-
-
-
-                <button onClick={() => { this.poll.title = "new title"; }}>click me</button>
-
+                        disabled={!this.props.appState.loggedIn || !this.checkedIndex} class="indent">Vote</button>
+                    <button
+                        onClick={()=>this.context.router.push('/poll/'+this.poll._id+'/results')}>
+                        Results</button>
                 </div>
-
-
-
             </div>
         );
     }
-
 };
 
 export default Poll;

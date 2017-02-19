@@ -16,7 +16,7 @@ app.use(logger('dev'));
 // sets up extra middleware for returning json i guess
 app.use(bodyParser.json());
 // ???
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 
@@ -35,6 +35,9 @@ app.use(function (req, res, next) {
 });
 
 // error handler
+
+// i should be crashing the app in dev mode and spitting out line number.
+
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -43,6 +46,9 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
 
+
+
+  console.log("xxxdo i get here");
 
   //res.render('error');
 
