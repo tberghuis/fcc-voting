@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Link } from 'react-router'
+import { Link, IndexLink } from 'react-router'
 //import {observable} from 'mobx';
 
 
@@ -59,7 +59,7 @@ class Navbar extends Component {
                     <div class="collapse navbar-collapse">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
-                                <Navlink to="/" class="nav-link">All Polls</Navlink>
+                                <Navlink to="/" class="nav-link" onlyActiveOnIndex={true}>All Polls</Navlink>
                             </li>
                             {loggedIn &&
                                 <li class="nav-item">

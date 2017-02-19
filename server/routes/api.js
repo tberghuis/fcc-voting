@@ -17,6 +17,10 @@ router.get('/poll', function (req, res, next) {
                 error: err
             });
         }
+
+        // get alreadyVoted
+
+
         res.status(200).json({
             message: 'Success',
             poll
@@ -58,7 +62,7 @@ router.post('/createpoll', function (req, res, next) {
             title: req.body.title,
             options: req.body.options,
             votes,
-            user: user
+            owner: user
         });
         poll.save(function (err, result) {
             if (err) {

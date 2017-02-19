@@ -14,27 +14,44 @@ router.post('/signup', function (req, res, next) {
         password: bcrypt.hashSync(req.body.password, 10),
         email: req.body.email
     });
-    user.save(function(err, result) {
+    user.save(function (err, result) {
         if (err) {
             return res.status(500).json({
                 title: 'An error occurred',
                 error: err
             });
         }
-        var token = jwt.sign({user: user}, process.env.SECRET, {expiresIn: 7200});
+        var token = jwt.sign({ user: user }, process.env.SECRET, { expiresIn: 86400 });
 
         // user contains bcrypted password
         // should i filter it out??? yes TODO
         res.status(201).json({
             message: 'User created',
             token,
-            user 
+            user
         });
     });
 });
 
-router.post('/login', function(req, res, next) {
-    User.findOne({email: req.body.email}, function(err, user) {
+
+router.get('/login', function (req, res, next) {
+    jwt.verify(req.query.token, process.env.SECRET, function (err, decoded) {
+        if (err) {
+            return res.status(401).json({
+                title: 'Not Authenticated',
+                error: err
+            });
+        }
+
+        //res.status(200);
+        res.sendStatus(200);
+    });
+});
+
+
+
+router.post('/login', function (req, res, next) {
+    User.findOne({ email: req.body.email }, function (err, user) {
         if (err) {
             return res.status(500).json({
                 title: 'An error occurred',
@@ -44,16 +61,16 @@ router.post('/login', function(req, res, next) {
         if (!user) {
             return res.status(401).json({
                 title: 'Login failed',
-                error: {message: 'Invalid login credentials'}
+                error: { message: 'Invalid login credentials' }
             });
         }
         if (!bcrypt.compareSync(req.body.password, user.password)) {
             return res.status(401).json({
                 title: 'Login failed',
-                error: {message: 'Invalid login credentials'}
+                error: { message: 'Invalid login credentials' }
             });
         }
-        var token = jwt.sign({user: user}, process.env.SECRET, {expiresIn: 7200});
+        var token = jwt.sign({ user: user }, process.env.SECRET, { expiresIn: 86400 });
         res.status(200).json({
             message: 'Successfully logged in',
             token: token,

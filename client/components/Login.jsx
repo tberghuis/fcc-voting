@@ -49,7 +49,7 @@ class Login extends Component {
                         <form onSubmit={this.handleSubmit}>
                             <div class="modal-header">
                                 <h5 class="modal-title">Log In</h5>
-                                <button type="button" class="close" aria-label="Close" onClick={()=>{this.props.viewState.loginModal = false;}}>
+                                <button type="button" class="close" aria-label="Close" onClick={() => { this.props.viewState.loginModal = false; }}>
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>

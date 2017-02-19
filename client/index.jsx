@@ -11,6 +11,11 @@ import CreatePoll from './components/CreatePoll.jsx';
 import AppState from './stores/AppState.jsx';
 import ViewState from './stores/ViewState.jsx';
 
+
+import style from './scss/style.scss';
+
+
+
 const appState = new AppState();
 const viewState = new ViewState();
 

@@ -1,4 +1,5 @@
 import { observable, computed } from 'mobx';
+import axios from 'axios';
 
 class AppState {
 
@@ -17,7 +18,19 @@ class AppState {
     this.name = localStorage.getItem("name");
 
     if (this.token) {
-      this.loggedIn = true;
+
+      // axios get /api/login
+      axios.get('/auth/login?token=' + this.token)
+        .then((response) => {
+
+          this.loggedIn = true;
+          console.log(this);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
+
     }
 
     // call authservice login

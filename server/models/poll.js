@@ -7,12 +7,13 @@ var schema = new Schema({
     title: { type: String, required: true },
     options: [String],
     votes: [Number],
-    user: { type: Schema.Types.ObjectId, ref: 'User' }
+    owner: { type: Schema.Types.ObjectId, ref: 'User' },
+    usersVoted: [String]
 });
 
 
 schema.post('remove', function (poll) {
-    User.findById(poll.user, function (err, user) {
+    User.findById(poll.owner, function (err, user) {
         user.polls.pull(poll);
         user.save();
     });
