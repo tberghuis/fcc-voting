@@ -9,6 +9,7 @@ class Poll extends Component {
     // somehow this magiically works without extendObservable
     @observable poll = null;
     @observable checkedIndex = null;
+    @observable newOption = "";
 
     static contextTypes = {
         router: React.PropTypes.object
@@ -40,7 +41,7 @@ class Poll extends Component {
         let vote = {};
         if (this.checkedIndex === 'newoption') {
             // get from refs
-            vote.newOption = this.newOption.value;
+            vote.newOption = this.newOption.trim();
         } else {
             vote.index = this.checkedIndex;
         }
@@ -65,13 +66,29 @@ class Poll extends Component {
         list.push(<li key={list.length} class="form-inline" onClick={() => this.checkedIndex = "newoption"}>
             <input type="radio" checked={'newoption' === this.checkedIndex} />
             <input
-                ref={(input) => { this.newOption = input }}
+                onChange={this.handleNewOptionChange}
                 class="form-control" type="text" placeholder="new option" /></li>);
         return list;
     }
 
+    voteButtonDisabled () {
+        if (!this.props.appState.loggedIn) return true;
+        if (this.checkedIndex == null) return true;
+        if ('newoption' === this.checkedIndex && this.newOption.trim() === "") return true;
+        return false;
+    }
+
+    handleNewOptionChange = (event) => {
+        this.newOption = event.target.value;
+    }
+
+
     render() {
         if (!this.poll) return <div>loading</div>;
+
+
+        console.log(this.checkedIndex);
+        console.log(this.checkedIndex>-1);
 
         return (
             <div class="row single-poll">
@@ -82,7 +99,7 @@ class Poll extends Component {
                     </ul>
                     <button
                         onClick={this.submitVote}
-                        disabled={!this.props.appState.loggedIn || !this.checkedIndex} class="indent">Vote</button>
+                        disabled={this.voteButtonDisabled()} class="indent">Vote</button>
                     <button
                         onClick={()=>this.context.router.push('/poll/'+this.poll._id+'/results')}>
                         Results</button>
