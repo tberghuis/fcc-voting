@@ -77,6 +77,8 @@ router.post('/pollvote', function (req, res, next) {
             });
         }
 
+        poll.usersVoted.push(userId);
+
         // read req body
 
         // if newoption
@@ -90,6 +92,8 @@ router.post('/pollvote', function (req, res, next) {
             // can i use try catch???
             // such a noob
             poll.votes[req.body.index]++;
+            // this was a lesson
+            poll.markModified("votes");
         }
 
         // save poll

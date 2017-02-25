@@ -8,6 +8,9 @@ class PollResults extends Component {
 
     @observable poll = null;
 
+    // these should actually be computed
+    @observable totalVotes = 0;
+    @observable pollOptionsSorted = [];
 
     constructor(props) {
         super(props);
@@ -16,21 +19,30 @@ class PollResults extends Component {
             .then((response) => {
                 this.poll = response.data.poll;
                 console.log(response.data.poll);
+                // calc total votes
+                this.totalVotes = response.data.poll.votes.reduce(function (a, b) { return a + b; }, 0);
+
+                let pollOptions = response.data.poll.options.map((option, i) => {
+                    return new PollOption(option, response.data.poll.votes[i]);
+                });
+                this.pollOptionsSorted = pollOptions.sort(PollOption.sort);
             })
             .catch((error) => {
                 console.log(error);
             });
     }
 
-
     render() {
-
 
         return (
             <div class="row">
                 <div class="col-12">
                     d3 shit goes in here
-                    {this.poll && <PollResultChart></PollResultChart>}
+                    {this.poll &&
+                        <PollResultChart
+                            pollOptions={this.pollOptionsSorted}
+                            totalVotes={this.totalVotes}
+                            title={this.poll.title}></PollResultChart>}
                 </div>
             </div>
         );
@@ -42,23 +54,41 @@ export default PollResults;
 
 class PollResultChart extends Component {
 
-
-
-    componentDidMount() {
-        // call d3
-    }
-
-    shouldComponentUpdate(nextProps) {
-        // call d3
-
-        // return false
-    }
-
     render() {
+
+        console.log(this.props);
+
+        let maxVotes = this.props.pollOptions[0] ? this.props.pollOptions[0].votes : 0;
+        console.log("maxVotes", maxVotes);
+
+        let width = 100;
+
+        let scaleFactor = maxVotes ? width / maxVotes : 0;
+
+        let tableRows = this.props.pollOptions.map((pollOption, i) => {
+
+            return (
+                <div class="row" key={i}>
+                    <div>{pollOption.option}</div>
+                    <div><div class="bar-chart-row" style={{ width: (scaleFactor * pollOption.votes) + "%" }} ></div></div>
+                    <div>{pollOption.votes}</div>
+                    <div>{Math.round(100 * pollOption.votes / this.props.totalVotes)} %</div>
+                </div>
+            );
+        });
+
         return (
-            <svg>
-                <text y="20" fill="black">Hello, World!</text>
-            </svg>
+
+            <div class="poll-result-chart">
+                <h1>{this.props.title}</h1>
+                <div className="row font-weight-bold">
+                    <div>Option</div>
+                    <div></div>
+                    <div>Votes</div>
+                    <div>%</div>
+                </div>
+                {tableRows}
+            </div >
         );
     }
 }
@@ -67,23 +97,14 @@ class PollResultChart extends Component {
 
 class PollOption {
 
-
-   // maxVotes
-   // totalVotes
-
-
-
-    constructor(option, votes){
+    constructor(option, votes) {
         this.option = option;
         this.votes = votes;
     }
 
-    // computed percentage
-
-
     // sort
-   static sort(a,b){
-        return b.votes-a.votes || (a.option > b.option ? 1 : -1);
+    static sort(a, b) {
+        return b.votes - a.votes || (a.option > b.option ? 1 : -1);
     }
 
 }
