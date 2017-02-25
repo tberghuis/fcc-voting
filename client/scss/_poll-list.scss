@@ -1,0 +1,12 @@
+.poll-list {
+    a {
+        // now its miracally working when it wasn't before
+        // cursor: pointer;
+
+        // its parent is flex so inline is ignored i think
+        // display: inline;
+    }
+    li {
+        justify-content: center;
+    }
+}

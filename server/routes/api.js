@@ -27,6 +27,39 @@ router.get('/poll', function (req, res, next) {
 });
 
 
+router.get('/allpolls', function (req, res, next) {
+    
+    // fetch poll and send response
+    // Poll.find({}, (error, polls) => {
+    //     if (error) {
+    //         return res.status(500).json({
+    //             title: 'An error occurred',
+    //             error: err
+    //         });
+    //     }
+
+
+    //     // res.status(200).json({
+    //     //     message: 'Success',
+    //     //     poll
+    //     // });
+    // });
+
+    Poll.find({}).select('title').exec((error,polls)=>{
+
+        //whats the shape of polls _id title
+
+        res.status(200).json({
+            message: 'Success',
+            polls
+        });
+
+    });
+
+});
+
+
+
 
 
 router.use('/', function (req, res, next) {

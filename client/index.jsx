@@ -6,6 +6,7 @@ import { Router, Route, IndexRoute, Link, browserHistory } from 'react-router'
 import App from './components/App.jsx';
 import Poll from './components/Poll.jsx';
 import PollResults from './components/PollResults.jsx';
+import AllPolls from './components/AllPolls.jsx';
 import Login from './components/Login.jsx';
 import Signup from './components/Signup.jsx';
 import CreatePoll from './components/CreatePoll.jsx';
@@ -42,7 +43,8 @@ render(
     <Provider {...state}>
       <Router history={browserHistory}>
         <Route path="/" component={App}>
-          { /* <IndexRoute component={Form} /> */ }
+          
+          { <IndexRoute component={AllPolls} /> }
           { /* remove auth routes replace with modals */ }
           <Route path="createpoll" component={CreatePoll} onEnter={requireAuth} />
           <Route path="/poll/:pollId" component={Poll} />
