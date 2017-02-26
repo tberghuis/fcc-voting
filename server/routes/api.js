@@ -42,16 +42,7 @@ router.get('/allpolls', function (req, res, next) {
 
 });
 
-
-
-
-
-
-
-
 router.use('/', function (req, res, next) {
-
-    //console.log(req.query.token);
 
     jwt.verify(req.query.token, process.env.SECRET, function (err, decoded) {
         if (err) {
@@ -68,8 +59,6 @@ router.use('/', function (req, res, next) {
 
 
 router.get('/mypolls', function (req, res, next) {
-
-    
 
     // auth middleware should get the userid ...
     let userId = jwt.decode(req.query.token).user._id;
@@ -92,19 +81,8 @@ router.get('/mypolls', function (req, res, next) {
 
 });
 
-
-
-
-// test if protected
-// router params
-// didnt work???
-//router.post('/poll/:id', function (req, res, next) {
 router.post('/pollvote', function (req, res, next) {
-    //let id = req.query.id;
     let pollId = req.query.id;
-
-    // i need to learn to use debugger
-
     console.log(pollId);
     let userId = jwt.decode(req.query.token).user._id;
 
@@ -118,8 +96,6 @@ router.post('/pollvote', function (req, res, next) {
                 error
             });
         }
-
-        // test this on client side
         if (poll.usersVoted.indexOf(userId) > -1) {
             return res.status(412).json({
                 title: 'User has already voted on this poll'
@@ -128,9 +104,6 @@ router.post('/pollvote', function (req, res, next) {
 
         poll.usersVoted.push(userId);
 
-        // read req body
-
-        // if newoption
         if (req.body.newOption) {
             poll.options.push(req.body.newOption);
             poll.votes.push(1);
@@ -144,8 +117,6 @@ router.post('/pollvote', function (req, res, next) {
             // this was a lesson
             poll.markModified("votes");
         }
-
-        // save poll
 
         poll.save(function (err, result) {
             if (err) {
@@ -163,8 +134,6 @@ router.post('/pollvote', function (req, res, next) {
     });
 
 });
-
-
 
 router.post('/createpoll', function (req, res, next) {
     var decoded = jwt.decode(req.query.token);
@@ -199,7 +168,5 @@ router.post('/createpoll', function (req, res, next) {
         });
     });
 });
-
-
 
 module.exports = router;

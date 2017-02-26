@@ -13,8 +13,6 @@ class Login extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-
-
     handleSubmit(event) {
         event.preventDefault();
 
@@ -33,8 +31,6 @@ class Login extends Component {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('user_id', response.data.user._id);
                 localStorage.setItem('name', response.data.user.name);
-
-
             })
             .catch(error => {
                 alert("Please enter correct email and password");

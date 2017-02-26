@@ -12,16 +12,11 @@ class MyPolls extends Component {
 
     constructor(props) {
         super(props);
-
-        // include token
+        
         let token = localStorage.getItem("token");
-
-        //fetch all polls
         axios.get('/api/mypolls?token='+token)
             .then((response) => {
-                //this.poll = response.data.poll;
                 console.log(response.data.polls);
-
                 this.polls = response.data.polls;
             })
             .catch((error) => {
@@ -36,11 +31,9 @@ class MyPolls extends Component {
             <div class="text-center">
                 <h1>Select a Poll to vote or see results.</h1><br/>
                 {this.polls && <PollList polls={this.polls} />}
-                
             </div>
         );
     }
 };
 
 export default MyPolls;
-

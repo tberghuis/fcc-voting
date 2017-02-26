@@ -22,7 +22,6 @@ router.post('/signup', function (req, res, next) {
             });
         }
         var token = jwt.sign({ user: user }, process.env.SECRET, { expiresIn: 86400 });
-
         // user contains bcrypted password
         // should i filter it out??? yes TODO
         res.status(201).json({
@@ -42,8 +41,6 @@ router.get('/login', function (req, res, next) {
                 error: err
             });
         }
-
-        //res.status(200);
         res.sendStatus(200);
     });
 });
@@ -78,8 +75,5 @@ router.post('/login', function (req, res, next) {
         });
     });
 });
-
-
-
 
 module.exports = router;

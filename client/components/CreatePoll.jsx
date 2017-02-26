@@ -3,7 +3,6 @@ import { inject, observer } from 'mobx-react';
 import { observable } from 'mobx';
 import axios from 'axios';
 
-//@inject("viewState", "appState") @observer
 @inject("appState") @observer
 class CreatePoll extends Component {
 
@@ -34,25 +33,17 @@ class CreatePoll extends Component {
             options
         };
 
-        // should be moved into service class but meh
-        
+        // should be moved into service class but meh        
         let token = "?token="+localStorage.getItem('token');
-
-
         axios.post('/api/createpoll'+token, post)
             .then((response) => {
-
                 console.log('new poll created');
-
                 console.log(response.data);
-
-                // history push /polls/${id} res data poll _id
                 this.context.router.push('/poll/' + response.data.poll._id);
             })
             .catch(error => {
                 console.log(error);
             });
-        
     }
 
     checkFormValidated = () => {
@@ -63,9 +54,7 @@ class CreatePoll extends Component {
 
 
     render() {
-
         let extraOptions = this.optionX.map((option, i) => {
-
             return (
                 <div key={i} class="form-group row">
                     <label class="col-2 col-form-label text-right">Option {i + 3}</label>
@@ -81,8 +70,6 @@ class CreatePoll extends Component {
             );
 
         });
-
-
 
         return (
             <div>

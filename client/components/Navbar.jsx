@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { Link, IndexLink } from 'react-router'
-//import {observable} from 'mobx';
-
-
-
 
 const Navlink = React.createClass({
     render() {
@@ -12,32 +8,25 @@ const Navlink = React.createClass({
     }
 });
 
-
-
 @inject("viewState", "appState") @observer
 class Navbar extends Component {
-
 
     static contextTypes = {
         router: React.PropTypes.object
     };
 
-
     constructor(props) {
         super(props);
-
         this.showSignupModal = this.showSignupModal.bind(this);
         this.showLoginModal = this.showLoginModal.bind(this);
         this.logout = this.logout.bind(this);
     }
-
 
     logout(e) {
         e.preventDefault();
         this.props.appState.logout();
         this.context.router.push('/');
     }
-
 
     showSignupModal(e) {
         e.preventDefault();
@@ -96,11 +85,5 @@ class Navbar extends Component {
     }
 
 };
-
-/*
-Navbar.contextTypes = {
-  router: React.PropTypes.object
-};
-*/
 
 export default Navbar;

@@ -5,7 +5,6 @@ import axios from 'axios';
 
 @inject("appState") @observer
 class Poll extends Component {
-
     // somehow this magiically works without extendObservable
     @observable poll = null;
     @observable checkedIndex = null;
@@ -17,7 +16,6 @@ class Poll extends Component {
 
     constructor(props) {
         super(props);
-
         // to be abstracted to service class
         // do it later
         let pollId = this.props.params.pollId;
@@ -32,24 +30,16 @@ class Poll extends Component {
             });
     }
 
-
     submitVote = () => {
-        
-        // axios post /api/poll/id { index: 2, newOption: "string" }
-        // protected route
         let token = "&token=" + localStorage.getItem('token');
         let vote = {};
         if (this.checkedIndex === 'newoption') {
-            // get from refs
             vote.newOption = this.newOption.trim();
         } else {
             vote.index = this.checkedIndex;
         }
         axios.post('/api/pollvote?id=' + this.poll._id + token, vote)
             .then((response) => {
-
-                // router push /poll/:id/results
-                // put in a function, call from onclick button
                 this.context.router.push('/poll/'+this.poll._id+'/results');
             })
             .catch(error => {
@@ -88,10 +78,6 @@ class Poll extends Component {
 
     render() {
         if (!this.poll) return <div>loading</div>;
-
-
-        console.log(this.checkedIndex);
-        console.log(this.checkedIndex>-1);
 
         return (
             <div class="row single-poll">
