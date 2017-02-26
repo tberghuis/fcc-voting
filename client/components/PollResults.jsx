@@ -35,15 +35,12 @@ class PollResults extends Component {
     render() {
 
         return (
-            <div class="row">
-                <div class="col-12">
-                    d3 shit goes in here
+            <div>
                     {this.poll &&
                         <PollResultChart
                             pollOptions={this.pollOptionsSorted}
                             totalVotes={this.totalVotes}
                             title={this.poll.title}></PollResultChart>}
-                </div>
             </div>
         );
     }
@@ -68,7 +65,7 @@ class PollResultChart extends Component {
         let tableRows = this.props.pollOptions.map((pollOption, i) => {
 
             return (
-                <div class="row" key={i}>
+                <div style={ {backgroundColor:i%2==0 && "lightgrey"}} class="row" key={i}>
                     <div>{pollOption.option}</div>
                     <div><div class="bar-chart-row" style={{ width: (scaleFactor * pollOption.votes) + "%" }} ></div></div>
                     <div>{pollOption.votes}</div>
@@ -80,7 +77,7 @@ class PollResultChart extends Component {
         return (
 
             <div class="poll-result-chart">
-                <h1>{this.props.title}</h1>
+                <h1>{this.props.title}</h1><br/>
                 <div className="row font-weight-bold">
                     <div>Option</div>
                     <div></div>

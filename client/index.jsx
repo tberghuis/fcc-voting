@@ -7,6 +7,7 @@ import App from './components/App.jsx';
 import Poll from './components/Poll.jsx';
 import PollResults from './components/PollResults.jsx';
 import AllPolls from './components/AllPolls.jsx';
+import MyPolls from './components/MyPolls.jsx';
 import Login from './components/Login.jsx';
 import Signup from './components/Signup.jsx';
 import CreatePoll from './components/CreatePoll.jsx';
@@ -47,6 +48,7 @@ render(
           { <IndexRoute component={AllPolls} /> }
           { /* remove auth routes replace with modals */ }
           <Route path="createpoll" component={CreatePoll} onEnter={requireAuth} />
+          <Route path="mypolls" component={MyPolls} onEnter={requireAuth} />
           <Route path="/poll/:pollId" component={Poll} />
           <Route path="/poll/:pollId/results" component={PollResults} />
         </Route>

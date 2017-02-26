@@ -3,38 +3,25 @@ import { inject, observer } from 'mobx-react';
 import { observable } from 'mobx';
 import axios from 'axios';
 
-// TODO better client site validation
-
 @inject("viewState", "appState") @observer
 class Signup extends Component {
 
-    /*
-    @observable name="";
-    @observable email="";
-    @observable password="";
-    */
-
-
-    nameInput;
-    emailInput;
-    passwordInput;
-
+    @observable name;
+    @observable email;
+    @observable password;
 
     constructor(props) {
         super(props);
-        //this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-
-
-    //handleSubmit(event) {
     handleSubmit = (event) => {
         event.preventDefault();
+        if (this.checkFormValidated() == "disabled") return;
 
         let name, email, password;
-        name = this.nameInput.value;
-        email = this.emailInput.value;
-        password = this.passwordInput.value;
+        name = this.name;
+        email = this.email;
+        password = this.password;
 
         axios.post('/auth/signup', { name, email, password })
             .then((response) => {
@@ -50,22 +37,24 @@ class Signup extends Component {
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('user_id', response.data.user._id);
                 localStorage.setItem('name', response.data.user.name);
-
-                // save token and user_id to appState
             })
             .catch(error => {
                 console.log(error);
+                alert("Could not sign up. Try a different email.");
             });
-
-        // lets just do the axios in here for now
-
-        // use refs to get at the data
-
-        // migrate this code into some sort of service object
-
-        // saves name token into store
-
     }
+
+    checkFormValidated = () => {
+        let name, email, password;
+        name = this.name;
+        email = this.email;
+        password = this.password;
+        if(!name || !email || !password)return "disabled";
+        if (name.trim() == "" || email.trim() == "" || password.trim() == "") {
+            return "disabled";
+        }
+    }
+
 
     render() {
         return (
@@ -85,7 +74,7 @@ class Signup extends Component {
                                     <label for="name">Name</label>
                                     <input
                                         type="text"
-                                        ref={(input) => { this.nameInput = input; }}
+                                        onChange={(e) => { this.name = e.target.value; }}
                                         class="form-control"
                                     />
                                 </div>
@@ -93,7 +82,7 @@ class Signup extends Component {
                                     <label for="email">E-Mail</label>
                                     <input
                                         type="email"
-                                        ref={(input) => { this.emailInput = input; }}
+                                        onChange={(e) => { this.email = e.target.value; }}
                                         class="form-control"
                                     />
                                 </div>
@@ -101,14 +90,14 @@ class Signup extends Component {
                                     <label for="password">Password</label>
                                     <input
                                         type="password"
-                                        ref={(input) => { this.passwordInput = input; }}
+                                        onChange={(e) => { this.password = e.target.value; }}
                                         class="form-control"
                                     />
                                 </div>
 
                             </div>
                             <div class="justify-content-start modal-footer">
-                                <button type="submit" class="btn btn-primary">Sign up</button>
+                                <button type="submit"  class={"btn btn-primary " + this.checkFormValidated()}>Sign up</button>
                             </div>
                         </form>
                     </div>

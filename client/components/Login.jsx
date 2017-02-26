@@ -37,6 +37,7 @@ class Login extends Component {
 
             })
             .catch(error => {
+                alert("Please enter correct email and password");
                 console.log(error);
             });
     }

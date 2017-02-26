@@ -5,6 +5,8 @@ var jwt = require('jsonwebtoken');
 var User = require('../models/user');
 var Poll = require('../models/poll');
 
+var ObjectId = require('mongoose').Types.ObjectId; 
+
 
 router.get('/poll', function (req, res, next) {
     let id = req.query.id;
@@ -28,26 +30,8 @@ router.get('/poll', function (req, res, next) {
 
 
 router.get('/allpolls', function (req, res, next) {
-    
-    // fetch poll and send response
-    // Poll.find({}, (error, polls) => {
-    //     if (error) {
-    //         return res.status(500).json({
-    //             title: 'An error occurred',
-    //             error: err
-    //         });
-    //     }
 
-
-    //     // res.status(200).json({
-    //     //     message: 'Success',
-    //     //     poll
-    //     // });
-    // });
-
-    Poll.find({}).select('title').exec((error,polls)=>{
-
-        //whats the shape of polls _id title
+    Poll.find({}).select('title').exec((error, polls) => {
 
         res.status(200).json({
             message: 'Success',
@@ -57,6 +41,9 @@ router.get('/allpolls', function (req, res, next) {
     });
 
 });
+
+
+
 
 
 
@@ -79,6 +66,35 @@ router.use('/', function (req, res, next) {
     })
 });
 
+
+router.get('/mypolls', function (req, res, next) {
+
+    
+
+    // auth middleware should get the userid ...
+    let userId = jwt.decode(req.query.token).user._id;
+
+    Poll.find({ owner: new ObjectId(userId) }).select('title').exec((error, polls) => {
+        console.log("do i get to mypolls");
+        if (error) {
+            return res.status(500).json({
+                title: 'An error occurred',
+                error
+            });
+        }
+
+        res.status(200).json({
+            message: 'Success',
+            polls
+        });
+
+    });
+
+});
+
+
+
+
 // test if protected
 // router params
 // didnt work???
@@ -99,7 +115,7 @@ router.post('/pollvote', function (req, res, next) {
         if (error) {
             return res.status(500).json({
                 title: 'An error occurred',
-                error: err
+                error
             });
         }
 

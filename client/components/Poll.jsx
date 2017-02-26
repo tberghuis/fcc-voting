@@ -54,6 +54,9 @@ class Poll extends Component {
             })
             .catch(error => {
                 console.log(error);
+                if(error.response.status === 412) {
+                    alert("You have already voted in this poll.");
+                }
             });
     }
 
