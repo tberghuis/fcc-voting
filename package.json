@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "devclient": "webpack-dev-server --history-api-fallback",
+    "build": "webpack",
     "devserver": "nodemon --debug --watch server ./server/bin/www"
   },
   "author": "",

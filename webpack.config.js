@@ -24,18 +24,7 @@ module.exports = {
         },
         {
             test: /\.scss$/,
-            // may need to fix style-loader!...
             loader: "style-loader!css-loader!sass-loader"
         }]
     }
 };
-
-
-
-/*
-    devtool: 'eval',
-    resolve: {
-        extensions: ['', '.js', '.jsx']
-    },
-
-*/
