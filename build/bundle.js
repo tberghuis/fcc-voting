@@ -20133,7 +20133,7 @@ var Navbar = (_dec = (0, _mobxReact.inject)("viewState", "appState"), _dec(_clas
                     ),
                     _react2.default.createElement(
                         'div',
-                        { className: 'collapse navbar-collapse' },
+                        { className: ' navbar-collapse' },
                         _react2.default.createElement(
                             'ul',
                             { className: 'navbar-nav mr-auto' },

@@ -246,6 +246,7 @@ router.post('/createpoll', function (req, res, next) {
 
 router.delete('/poll/:pollId', function (req, res) {
     var userId = jwt.decode(req.query.token).user._id;
+    // TODO test that userid is owner of poll
     Poll.remove({
         _id: req.params.pollId
     }, function (err) {

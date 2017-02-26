@@ -45,7 +45,7 @@ class Navbar extends Component {
             <div>
                 <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
                     <Link to="/" class="navbar-brand">FCC Voting App</Link>
-                    <div class="collapse navbar-collapse">
+                    <div class=" navbar-collapse">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item">
                                 <Navlink to="/" class="nav-link" onlyActiveOnIndex={true}>All Polls</Navlink>
