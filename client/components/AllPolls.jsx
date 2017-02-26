@@ -25,7 +25,8 @@ class AllPolls extends Component {
     render() {
         return (
             <div class="text-center">
-                <h1>Select a Poll to vote or see results.</h1><br/>
+                <p>Signup or Login to create a new poll, or
+                select a Poll from the below list to vote or see results.</p><br/>
                 {this.polls && <PollList polls={this.polls} />}  
             </div>
         );
