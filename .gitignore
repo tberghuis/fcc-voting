@@ -1,4 +1,5 @@
-/node_modules
+# check in node_modules as droplet crashing on npm install
+# /node_modules
 tmp
 /notes.txt
 npm-debug.log
