@@ -8,5 +8,11 @@
     }
     li {
         justify-content: center;
+        position: relative;
+    }
+    button {
+        // float:right;
+        position: absolute;
+        right:12px;
     }
 }

@@ -8,7 +8,8 @@ var schema = new Schema({
     options: [String],
     votes: [Number],
     owner: { type: Schema.Types.ObjectId, ref: 'User' },
-    usersVoted: [String]
+    usersVoted: [String],
+    ipsVoted: [String]
 });
 
 

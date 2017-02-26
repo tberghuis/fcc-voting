@@ -31,6 +31,7 @@ class Poll extends Component {
     }
 
     submitVote = () => {
+
         let token = "&token=" + localStorage.getItem('token');
         let vote = {};
         if (this.checkedIndex === 'newoption') {
@@ -38,19 +39,25 @@ class Poll extends Component {
         } else {
             vote.index = this.checkedIndex;
         }
-        axios.post('/api/pollvote?id=' + this.poll._id + token, vote)
+
+        // very messy
+        var url = '/api/pollvote?id=' + this.poll._id + token;
+        if (!this.props.appState.loggedIn) {
+            url = '/api/pollvoteanon/' + this.poll._id;
+        }
+
+        axios.post(url, vote)
             .then((response) => {
-                this.context.router.push('/poll/'+this.poll._id+'/results');
+                this.context.router.push('/poll/' + this.poll._id + '/results');
             })
             .catch(error => {
-                console.log(error);
-                if(error.response.status === 412) {
+                console.log(error.response);
+                if (error.response.status === 412) {
+                    // need better than this alert shit
                     alert("You have already voted in this poll.");
                 }
             });
     }
-
-
 
     getRadioList = () => {
         let list = this.poll.options.map((option, i) => {
@@ -64,8 +71,8 @@ class Poll extends Component {
         return list;
     }
 
-    voteButtonDisabled () {
-        if (!this.props.appState.loggedIn) return true;
+    voteButtonDisabled() {
+        //if (!this.props.appState.loggedIn) return true;
         if (this.checkedIndex == null) return true;
         if ('newoption' === this.checkedIndex && this.newOption.trim() === "") return true;
         return false;
@@ -74,7 +81,6 @@ class Poll extends Component {
     handleNewOptionChange = (event) => {
         this.newOption = event.target.value;
     }
-
 
     render() {
         if (!this.poll) return <div>loading</div>;
@@ -90,8 +96,10 @@ class Poll extends Component {
                         onClick={this.submitVote}
                         disabled={this.voteButtonDisabled()} class="indent">Vote</button>
                     <button
-                        onClick={()=>this.context.router.push('/poll/'+this.poll._id+'/results')}>
+                        onClick={() => this.context.router.push('/poll/' + this.poll._id + '/results')}>
                         Results</button>
+                    <br /><br />
+                    Share this poll by copying the URL in the address bar.
                 </div>
             </div>
         );

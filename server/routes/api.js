@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 var User = require('../models/user');
 var Poll = require('../models/poll');
 
-var ObjectId = require('mongoose').Types.ObjectId; 
+var ObjectId = require('mongoose').Types.ObjectId;
 
 
 router.get('/poll', function (req, res, next) {
@@ -41,6 +41,79 @@ router.get('/allpolls', function (req, res, next) {
     });
 
 });
+
+
+
+
+
+// hey this is really bad rest api design.
+// will do better next time
+
+// req.body = { index, newOption }
+router.post('/pollvoteanon/:pollId', function (req, res) {
+
+    Poll.findById(req.params.pollId, (error, poll) => {
+        if (error) {
+            return res.status(500).json({
+                title: 'An error occurred',
+                error
+            });
+        }
+        // check if ip voted
+        var ip = req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+        if (poll.ipsVoted.indexOf(ip) > -1) {
+            return res.status(412).json({
+                title: 'User at IP '+ip+' has already voted on this poll'
+            });
+        }
+        // push ip to ipsVoted [] and markModified
+        poll.ipsVoted.push(ip);
+        poll.markModified("ipsVoted");
+
+        if (req.body.newOption) {
+            poll.options.push(req.body.newOption);
+            poll.votes.push(1);
+
+        }
+        else {
+
+            poll.votes[req.body.index]++;
+            // this was a lesson
+            poll.markModified("votes");
+        }
+
+        poll.save(function (err, result) {
+            if (err) {
+                return res.status(500).json({
+                    title: 'An error occurred',
+                    error: err
+                });
+            }
+            res.status(201).json({
+                message: 'voted on poll',
+                poll: result
+            });
+        });
+
+    });
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.use('/', function (req, res, next) {
 
@@ -103,6 +176,7 @@ router.post('/pollvote', function (req, res, next) {
         }
 
         poll.usersVoted.push(userId);
+        poll.markModified("usersVoted");
 
         if (req.body.newOption) {
             poll.options.push(req.body.newOption);
@@ -166,6 +240,18 @@ router.post('/createpoll', function (req, res, next) {
                 poll: result
             });
         });
+    });
+});
+
+
+router.delete('/poll/:pollId', function (req, res) {
+    var userId = jwt.decode(req.query.token).user._id;
+    Poll.remove({
+        _id: req.params.pollId
+    }, function (err) {
+        if (err)
+            res.send(err);
+        res.status(204).json({ message: 'Successfully deleted' });
     });
 });
 
