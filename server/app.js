@@ -28,6 +28,8 @@ app.use(express.static('build'));
 app.get('/*',function(req, res){
   //res.sendfile(__dirname + '/../client/index.html');
   //res.sendFile('client/index.html');
+
+  // sendfile deprecated use sendFile
   res.sendfile('client/index.html');
 });
 
