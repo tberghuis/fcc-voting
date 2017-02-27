@@ -87,7 +87,7 @@ class Poll extends Component {
 
         return (
             <div class="row single-poll">
-                <div class="col-6 push-3">
+                <div class="col-12 col-lg-6 push-lg-3">
                     <h1>{this.poll.title}</h1>
                     <ul class="list-unstyled">
                         {this.getRadioList()}

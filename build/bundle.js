@@ -18666,7 +18666,7 @@ var Poll = (_dec = (0, _mobxReact.inject)("appState"), _dec(_class = (0, _mobxRe
                 { className: 'row single-poll' },
                 _react2.default.createElement(
                     'div',
-                    { className: 'col-6 push-3' },
+                    { className: 'col-12 col-lg-6 push-lg-3' },
                     _react2.default.createElement(
                         'h1',
                         null,
