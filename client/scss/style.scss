@@ -4,3 +4,11 @@
 @import 'poll';
 @import 'poll-result';
 @import 'poll-list';
+
+
+
+@media (max-width: 900px) {
+  #github-banner {
+      display: none;
+  }
+}
